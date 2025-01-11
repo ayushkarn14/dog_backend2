@@ -114,6 +114,34 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
+        #loading-bar-container {
+            width: 80%;
+            max-width: 400px;
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 20px auto;
+            display: none;
+        }
+
+        #loading-bar {
+            width: 0;
+            height: 100%;
+            background-color: #3498db;
+            animation: loadingAnimation 2s infinite;
+        }
+
+        @keyframes loadingAnimation {
+            0% {
+                width: 0;
+            }
+
+            100% {
+                width: 100%;
+            }
+        }
+
         @media (max-width: 600px) {
 
             #uploaded-image,
@@ -145,6 +173,10 @@
         <button type="submit">Identify</button>
     </form>
 
+    <div id="loading-bar-container">
+        <div id="loading-bar"></div>
+    </div>
+
     <div class="image-container">
         <h2 class="title" id="selected-title">Selected Image</h2>
         <img id="uploaded-image" alt="Selected image will appear here">
@@ -161,6 +193,8 @@
         const processedImage = document.getElementById('processed-image');
         const selectedTitle = document.getElementById('selected-title');
         const processedTitle = document.getElementById('processed-title');
+        const loadingBarContainer = document.getElementById('loading-bar-container');
+        const loadingBar = document.getElementById('loading-bar');
 
         imageInput.addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -180,6 +214,9 @@
         document.getElementById('image-upload-form').addEventListener('submit', function (event) {
             event.preventDefault();
 
+            loadingBarContainer.style.display = 'block';
+            loadingBar.style.width = '0';
+
             const formData = new FormData();
             formData.append('image', imageInput.files[0]);
 
@@ -195,9 +232,11 @@
                     processedTitle.style.display = 'block';
                     uploadedImage.style.display = 'none';
                     selectedTitle.style.display = 'none';
+                    loadingBarContainer.style.display = 'none';
                 })
                 .catch(error => {
                     console.error('Error:', error);
+                    loadingBarContainer.style.display = 'none';
                 });
         });
     </script>
